@@ -9,10 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.5",
+    "@heroicons/react": "^2.1.5",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.3",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.9",
+    "classnames": "^2.5.1",
     "next": "14.2.8",
     "react": "^18",
     "react-dom": "^18",
-    "visio-cms-lib": "^0.1.196"
+    "swr": "^2.2.5",
+    "visio-cms-lib": "file:../visio-cms-lib"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -21,6 +29,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.8",
     "postcss": "^8",
+    "prettier": "3.3.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

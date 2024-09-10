@@ -10,7 +10,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { slug, locale } = await req.json();
 
-    const supabaseClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
     const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
     if (error) {
       throw error;

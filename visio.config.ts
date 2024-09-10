@@ -1,5 +1,5 @@
-import blocks from '@/app/(visio)/blocks'
-import { buildConfig } from 'visio-cms-lib/utils'
+import blocks from '@/app/(visio)/blocks';
+import { buildConfig } from 'visio-cms-lib/utils';
 
 const config = buildConfig({
   blocks,
@@ -23,6 +23,6 @@ const config = buildConfig({
   supabaseProjectUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANONKEY || '',
   unsplashAccessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESSKEY || '',
-})
+});
 
-export default config
+export default config;
