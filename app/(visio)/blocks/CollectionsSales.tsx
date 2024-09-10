@@ -205,7 +205,7 @@ CollectionSales.Schema = {
         {
           propName: 'href',
           label: 'Link',
-          type: 'text',
+          type: 'link',
         },
         {
           propName: 'image',

@@ -7,6 +7,8 @@ import CollectionSales from './CollectionsSales';
 import Incentives from './Incentives';
 import Footer from './Footer';
 import ProductsList from './ProductsList';
+import ProductDetails from './ProductDetails';
+import ShoppingCart from './ShoppingCart';
 const blocks = [
   Hero,
   Navbar,
@@ -16,6 +18,8 @@ const blocks = [
   Incentives,
   Footer,
   ProductsList,
+  ProductDetails,
+  ShoppingCart,
 ] as unknown as BlockList[];
 
 export default blocks;

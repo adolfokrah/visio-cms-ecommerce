@@ -23,6 +23,7 @@ import { createClient } from '@/utils/supabase/client';
 import useSWR from 'swr';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/app/components/Skeleton';
+import useSetQueryParams from '@/utils/hooks/useSetQueryParams';
 
 const sortOptions = [
   { name: 'Newest', sort: 'newest', current: false },
@@ -67,18 +68,7 @@ const ProductsList: Block = () => {
   const colors = searchParams.get('colors');
   const query = searchParams.get('query');
   const sort = searchParams.get('sort');
-  const router = useRouter();
-  const pathname = usePathname();
-  const isLiveMode = getProjectMode() === 'LIVE';
-
-  const setQueryParam = (name: string, value: string) => {
-    if (!isLiveMode) return;
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    current.set(name, value);
-    const search = current.toString();
-    const query = search ? `?${search}` : '';
-    router.push(`${pathname}${query}`);
-  };
+  const { setQueryParam } = useSetQueryParams();
 
   const setQueryFilters = (section: Filter, option: Option) => {
     const options = section.id == 'category' ? categories : colors;
@@ -178,18 +168,18 @@ const ProductsList: Block = () => {
 
   const products = useMemo(
     () =>
-      data?.map(
-        (product: any) =>
-          ({
-            id: product.id,
-            name: product.name,
-            availableColors: product.available_colors as ProductColor[],
-            price: product.price,
-            href: `/products/${product.id}`,
-            imageSrc: product.photos?.[0].src,
-            imageAlt: product.photos?.[0].alt,
-          }) as Product,
-      ),
+      data?.map((product: any) => {
+        return {
+          id: product.id,
+          name: product.name,
+          availableColors: product.available_colors as ProductColor[],
+          price: product.price,
+          href: `/products/${product.id}`,
+          imageSrc: product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.src,
+          imageAlt:  product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.altText,
+          images: product.photos,
+        } as Product;
+      }),
     [data],
   );
 

@@ -5,6 +5,8 @@ import PageContent from '../../page-content';
 import NotFound from '@/app/not-found';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Toaster } from '@/app/components/Sonner';
+
 type PageProps = {
   params: { slug: string[]; locale: string };
 };
@@ -62,6 +64,7 @@ export default async function Page({ params }: PageProps) {
         params={{ ...data.params }}
         pages={data.pages}
       />
+      <Toaster />
     </>
   );
 }

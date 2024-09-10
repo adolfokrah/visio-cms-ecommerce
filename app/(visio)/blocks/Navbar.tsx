@@ -10,7 +10,8 @@ import Text from 'visio-cms-lib/Text';
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getParams, getProjectMode } from 'visio-cms-lib/utils';
+import { getLink, getParams, getProjectMode } from 'visio-cms-lib/utils';
+import useCartState from '@/utils/state/useCartState';
 // import { getParams } from 'visio-cms-lib/utils';
 
 function classNames(...classes) {
@@ -21,10 +22,13 @@ interface NavbarProps {
   logo: MediaFile;
   pageBlockId?: string;
   navigation: { name: string; href: string; current: boolean; itemKey: string }[];
+  cartUrl: string;
 }
 
-const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation }) => {
+const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation, cartUrl }) => {
   const [path, setPath] = useState<string | null>(null);
+  const { cart } = useCartState();
+
   const { locale, gender_category = 'men' } = getParams<{ locale: string; gender_category: string }>();
   const searchParams = useSearchParams();
   const isLiveMode = getProjectMode() === 'LIVE';
@@ -38,7 +42,7 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation }) => {
     event.preventDefault();
     if (!isLiveMode) return;
     const formData = new FormData(event.currentTarget);
-    router.push(`/${locale}/products/${gender_category}?query=${formData.get('query')}`);
+    router.push(`/${locale}/products-list/${gender_category}?query=${formData.get('query')}`);
   }
 
   return (
@@ -53,7 +57,9 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation }) => {
                 propName="logo"
                 fallbackImage="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 renderImage={({ imagePublicUrl, altText }) => (
-                  <Image alt={altText} src={`${imagePublicUrl}`} width={100} height={10} unoptimized />
+                  <Link href={getLink('/')}>
+                    <Image alt={altText} src={`${imagePublicUrl}`} width={100} height={10} unoptimized />
+                  </Link>
                 )}
               />
             </div>
@@ -88,14 +94,15 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation }) => {
             </DisclosureButton>
           </div>
           <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-            <button
-              type="button"
-              className="relative flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            <Link
+              href={getLink(cartUrl)}
+              className="relative flex items-center  flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
               <ShoppingBagIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
+              <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                {cart.reduce((acc, item) => acc + item.qty, 0)}
+              </span>
+            </Link>
           </div>
         </div>
 
@@ -159,6 +166,7 @@ Navbar.Schema = {
   id: 'navbar',
   group: 'Navigation',
   defaultPropValues: {
+    cartUrl: '#',
     navigation: [
       { name: 'Dashboard', href: '#', current: false, itemKey: 'dashboard' },
       { name: 'Team', href: '#', current: false, itemKey: 'team' },
@@ -167,7 +175,13 @@ Navbar.Schema = {
     ],
     logo: { mediaHash: undefined, width: 32, height: 32, altText: 'logo' },
   },
-  sideEditingProps: [],
+  sideEditingProps: [
+    {
+      propName: 'cartUrl',
+      type: 'link',
+      label: 'Cart URL',
+    },
+  ],
   lists: [
     {
       propName: 'navigation',

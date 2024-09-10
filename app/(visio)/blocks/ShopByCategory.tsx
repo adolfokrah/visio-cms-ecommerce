@@ -28,13 +28,7 @@ const ShopByCategory: Block<ShopByCategoryProps> = ({ title, cta, categories, pa
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             <Text propName="title" pageBlockId={pageBlockId} defaultValue={title} />
           </h2>
-          <Link
-            href={getLink(cta.href)}
-            className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
-          >
-            <Text propName="ctaText" pageBlockId={pageBlockId} defaultValue={cta.title} />
-            <span aria-hidden="true"> &rarr;</span>
-          </Link>
+          
         </div>
 
         <List
