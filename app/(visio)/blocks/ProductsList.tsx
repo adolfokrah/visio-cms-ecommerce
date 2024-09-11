@@ -17,11 +17,11 @@ import {
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Block } from 'visio-cms-lib/types';
-import { getParams, getProjectMode } from 'visio-cms-lib/utils';
+import { getParams } from 'visio-cms-lib/utils';
 import ProductItem, { Product, ProductColor } from '@/app/components/ProductItem';
 import { createClient } from '@/utils/supabase/client';
 import useSWR from 'swr';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {  useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/app/components/Skeleton';
 import useSetQueryParams from '@/utils/hooks/useSetQueryParams';
 

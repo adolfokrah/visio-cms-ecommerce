@@ -174,7 +174,7 @@ const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', order
             <div className="mt-6">
               <button
                 type="button"
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || loading}
                 onClick={async () => {
                   setLoading(true);
                   const url = await checkout(`http://localhost:3000/${getLink(orderSummary.cta.href)}`, cart);

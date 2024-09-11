@@ -3,27 +3,12 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, Radio, RadioGroup } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { StarIcon } from '@heroicons/react/20/solid';
 import { Product } from './ProductItem';
 import Link from 'next/link';
 import { getLink } from 'visio-cms-lib';
 import useCartState from '@/utils/state/useCartState';
 import Image from 'next/image';
 import { getParams } from 'visio-cms-lib/utils';
-
-const initialProductData = {
-  name: "Women's Basic Tee",
-  price: '$32',
-  rating: 3.9,
-  reviewCount: 512,
-  href: '#',
-  imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-featured-product-shot.jpg',
-  imageAlt: "Back of women's Basic Tee in black.",
-  colors: [
-    { name: 'Black', bgColor: 'bg-gray-900', selectedColor: 'ring-gray-900' },
-    { name: 'Heather Grey', bgColor: 'bg-gray-400', selectedColor: 'ring-gray-400' },
-  ],
-};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');

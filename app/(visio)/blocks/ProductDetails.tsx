@@ -10,6 +10,7 @@ import useSetQueryParams from '@/utils/hooks/useSetQueryParams';
 import { useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/app/components/Skeleton';
 import useCartState from '@/utils/state/useCartState';
+import Image from 'next/image';
 
 type Image = {
   id: number;
@@ -56,6 +57,7 @@ const initialProduct = {
   description: `
       <p>The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use.</p>
     `,
+  
 };
 
 const ProductDetails: Block = () => {
@@ -67,7 +69,7 @@ const ProductDetails: Block = () => {
   const isBuilderMode = getProjectMode() === 'BUILDER';
   const { addToCart } = useCartState();
 
-  const { data, error, isLoading } = useSWR(`/api/product/${id}/${selectedColor}`, async () => {
+  const { data,  isLoading } = useSWR(`/api/product/${id}/${selectedColor}`, async () => {
     const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
     if (error) {
       throw error;
@@ -75,14 +77,12 @@ const ProductDetails: Block = () => {
     return data;
   });
 
-  const product = isBuilderMode
-    ? initialProduct
-    : useMemo(() => {
+  let product = useMemo(() => {
         if (!data) {
           return null;
         }
-        const photos = data.photos as { id: string; src: string; altText: string; color: string }[];
-        const colors = data.available_colors as { id: string; name: string; colorBg: string }[];
+        const photos = data.photos as { id: number; src: string; altText: string; color: string }[];
+        const colors = data.available_colors as { id: number; name: string; colorBg: string }[];
 
         return {
           id: data.id,
@@ -102,7 +102,11 @@ const ProductDetails: Block = () => {
           })),
           description: data.description,
         };
-      }, [data]);
+      }, [data, selectedColor]);
+
+  if (isBuilderMode) {
+    product = initialProduct;
+  }
 
   if (isLoading) {
     return (
@@ -155,7 +159,7 @@ const ProductDetails: Block = () => {
                     >
                       <span className="sr-only">{image.name}</span>
                       <span className="absolute inset-0 overflow-hidden rounded-md">
-                        <img alt="" src={image.src} className="h-full w-full object-cover object-center" />
+                        <Image unoptimized fill alt="" src={image.src} className="h-full w-full object-cover object-center" />
                       </span>
                       <span
                         aria-hidden="true"
@@ -169,7 +173,9 @@ const ProductDetails: Block = () => {
               <TabPanels className="aspect-h-1 aspect-w-1 w-full">
                 {product.images.map((image) => (
                   <TabPanel key={image.id}>
-                    <img
+                    <Image
+                      fill
+                      unoptimized
                       alt={image.alt}
                       src={image.src}
                       className="h-full w-full object-cover object-center sm:rounded-lg"
