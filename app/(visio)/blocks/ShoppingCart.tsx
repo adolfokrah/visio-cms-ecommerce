@@ -8,6 +8,7 @@ import checkout from '@/app/server-actions/checkout';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import useCart from '@/utils/hooks/useCart';
+import { useState } from 'react';
 
 interface ShoppingCartProps {
   title: string;
@@ -25,6 +26,7 @@ interface ShoppingCartProps {
 const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', orderSummary }) => {
   const router = useRouter();
   const { products, updateQty, removeFromCart, cart } = useCart();
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="bg-white">
@@ -174,6 +176,7 @@ const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', order
                 type="button"
                 disabled={cart.length === 0}
                 onClick={async () => {
+                  setLoading(true);
                   const url = await checkout(`http://localhost:3000/${getLink(orderSummary.cta.href)}`, cart);
                   if (url) {
                     if (typeof url === 'string') {
@@ -182,14 +185,15 @@ const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', order
                       toast.error(url.error);
                     }
                   }
+                  setLoading(false);
                 }}
                 className="w-full rounded-md border border-transparent inline-block text-center bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
-                <Text
+                {loading ? 'Processing...' : <Text
                   pageBlockId={pageBlockId}
                   defaultValue={orderSummary?.cta?.title}
                   propName="orderSummary.ctaText"
-                />
+                />}
               </button>
             </div>
           </section>
