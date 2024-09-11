@@ -14,7 +14,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
-    const { error, data } = await supabaseClient.from('pages').select('slug, id, name');
+    const { error, data } = await supabaseClient.from('pages').select('slug, id, name, tags');
     if (error) {
       throw error;
     }
@@ -47,10 +47,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     const seo = pageData[0]?.seo[locale]?.meta;
 
+    const metaData = {
+      seo,
+      params: {...foundPage?.params, tags: pageData[0]?.tags},
+    }
+
     return new Response(
-      JSON.stringify({
-        ...seo,
-      }),
+      JSON.stringify(metaData),
       {
         status: 200,
         headers: {

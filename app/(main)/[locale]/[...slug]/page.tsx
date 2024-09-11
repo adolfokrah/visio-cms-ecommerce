@@ -6,6 +6,7 @@ import NotFound from '@/app/not-found';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Toaster } from '@/app/components/Sonner';
+import getProductMeta from '@/app/server-actions/getProductMeta';
 
 type PageProps = {
   params: { slug: string[]; locale: string };
@@ -14,12 +15,15 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, locale } = params;
 
-  const pageMetaData = await getPageMetaData(
+  const data = await getPageMetaData(
     `/${slug.join('/')}`,
     process.env.NEXT_PUBLIC_SUPABASE_ANONKEY || '',
     process.env.NEXT_PUBLIC_SUPABASE_URL || '',
     locale,
   );
+
+  const productMeta = data?.params?.tags.length ?  await getProductMeta(data?.params?.id) : null;
+  const pageMetaData =  productMeta ||  data?.seo;
 
   return {
     title: pageMetaData.title,
