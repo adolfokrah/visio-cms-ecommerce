@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     locale,
   );
 
-  const productMeta = data?.params?.tags.length ?  await getProductMeta(data?.params?.id) : null;
+  const productMeta = data?.params?.tags == 'product' ?  await getProductMeta(data?.params?.id) : null;
   const pageMetaData =  productMeta ||  data?.seo;
 
   return {
