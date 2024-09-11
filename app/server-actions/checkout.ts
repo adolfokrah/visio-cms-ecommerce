@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY ?? '');
 
-export default async function checkout(callBackUrl: string, cart: { id: number; qty: number; color: string }[]) {
+export default async function checkout( cart: { id: number; qty: number; color: string }[]) {
   if (cart.length === 0) {
     return { error: 'Cart is empty' };
   }
@@ -65,9 +65,11 @@ export default async function checkout(callBackUrl: string, cart: { id: number; 
       }),
   );
 
+
   try {
     // Create Checkout Sessions from body params.
     const ref = uuidv4();
+    const checkoutUrl = process.env.STRIPE_REDIRECT_URL || 'http://localhost:3000/checkout';
     const session = await stripeInstance.checkout.sessions.create({
       client_reference_id: ref,
       line_items: lineItems,
@@ -76,8 +78,8 @@ export default async function checkout(callBackUrl: string, cart: { id: number; 
       },
       billing_address_collection: 'required',
       mode: 'payment',
-      success_url: `${callBackUrl}/?success=true&ref=${ref}`,
-      cancel_url: `${callBackUrl}/?canceled=true&ref=${ref}`,
+      success_url: `${checkoutUrl}/?success=true&ref=${ref}`,
+      cancel_url: `${checkoutUrl}/?canceled=true&ref=${ref}`,
     });
     return session.url;
   } catch (err: any) {
