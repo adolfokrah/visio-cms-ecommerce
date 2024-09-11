@@ -84,7 +84,18 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation, cartUr
               </form>
             </div>
           </div>
-          <div className="relative z-10 flex items-center lg:hidden">
+          <div className="relative z-10 flex gap-2 items-center lg:hidden">
+
+           <Link
+              href={getLink(cartUrl)}
+              className="relative flex items-center  flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <ShoppingBagIcon aria-hidden="true" className="h-6 w-6" />
+              <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                {cart.reduce((acc, item) => acc + item.qty, 0)}
+              </span>
+            </Link>
+
             {/* Mobile menu button */}
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
               <span className="absolute -inset-0.5" />
@@ -92,6 +103,8 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation, cartUr
               <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />
               <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
             </DisclosureButton>
+
+            
           </div>
           <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
             <Link
@@ -156,6 +169,8 @@ const Navbar: Block<NavbarProps> = ({ logo, pageBlockId = '', navigation, cartUr
             );
           }}
         />
+
+            
       </DisclosurePanel>
     </Disclosure>
   );
