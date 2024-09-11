@@ -69,7 +69,7 @@ export default async function checkout( cart: { id: number; qty: number; color: 
   try {
     // Create Checkout Sessions from body params.
     const ref = uuidv4();
-    const checkoutUrl = process.env.STRIPE_REDIRECT_URL || 'http://localhost:3000/checkout';
+    const checkoutUrl = process.env.STRIPE_REDIRECT_URL || 'http://localhost:3000/en-us/checkout';
     const session = await stripeInstance.checkout.sessions.create({
       client_reference_id: ref,
       line_items: lineItems,
