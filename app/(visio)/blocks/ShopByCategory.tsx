@@ -28,7 +28,6 @@ const ShopByCategory: Block<ShopByCategoryProps> = ({ title, cta, categories, pa
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             <Text propName="title" pageBlockId={pageBlockId} defaultValue={title} />
           </h2>
-          
         </div>
 
         <List

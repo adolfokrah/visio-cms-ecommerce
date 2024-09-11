@@ -12,6 +12,7 @@ type Cart = {
   addToCart: (product: { id: number; qty: number; color: string }) => void;
   removeFromCart: (productId: number, color: string) => void;
   updateQty: (productId: number, qty: number, color: string) => void;
+  emptyCart: () => void;
 };
 
 export const useCartState = create(
@@ -59,6 +60,11 @@ export const useCartState = create(
           }),
         }));
         toast.success('Quantity updated');
+      },
+      emptyCart: () => {
+        const isLiveMode = getProjectMode() === 'LIVE';
+        if (!isLiveMode) return;
+        set({ cart: [] });
       },
     }),
     {

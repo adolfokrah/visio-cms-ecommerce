@@ -57,17 +57,20 @@ const Hero: Block<HeroProps> = ({ title, subTitle, cta, imagesGrids, pageBlockId
                         defaultValue={image}
                         pageBlockId={pageBlockId}
                         propName={`imagesGrids.${index}.images.${ImageIndex}`}
-                        fallbackImage="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
-                        wrapperClassName={classNames('!h-60 w-44 overflow-hidden rounded-lg relative', {
+                        wrapperClassName={classNames('!h-60 w-44 bg-slate-50 overflow-hidden rounded-lg relative', {
                           'sm:opacity-0 lg:opacity-100 h-0': index < 1 && ImageIndex < 1,
                         })}
                         renderImage={({ imagePublicUrl, altText }) => (
-                          <Image
-                            alt={altText}
-                            src={`${imagePublicUrl}?t=${new Date().getTime()}`}
-                            fill
-                            className="h-full w-full object-cover object-center"
-                          />
+                          <>
+                            {!imagePublicUrl ? null : (
+                              <Image
+                                alt={altText}
+                                src={`${imagePublicUrl}?t=${new Date().getTime()}`}
+                                fill
+                                className="h-full w-full object-cover object-center"
+                              />
+                            )}
+                          </>
                         )}
                       />
                     )}

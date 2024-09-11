@@ -1,60 +1,13 @@
-import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Block } from 'visio-cms-lib/types';
 import Text from 'visio-cms-lib/Text';
-import { getProjectMode } from 'visio-cms-lib';
-import useSWR from 'swr';
-import { createClient } from '@/utils/supabase/client';
-import useCartState from '@/utils/state/useCartState';
-import { useMemo } from 'react';
-import { getLink, getParams } from 'visio-cms-lib/utils';
+import { getLink } from 'visio-cms-lib/utils';
 import Link from 'next/link';
-const initialProducts = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: {
-      id: 'sienna',
-      name: 'Sienna',
-      colorBg: '#be8e59',
-    },
-    inStock: true,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in sienna.",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: {
-      id: 'black',
-      name: 'Black',
-      colorBg: '#000',
-    },
-    inStock: false,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    quantity: 2,
-  },
-  {
-    id: 3,
-    name: 'Nomad Tumbler',
-    href: '#',
-    price: '$35.00',
-    color: {
-      id: 'white',
-      name: 'White',
-      colorBg: '#fff',
-    },
-    inStock: true,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
-    imageAlt: 'Insulated bottle with white base and black snap lid.',
-    quantity: 1,
-  },
-];
+import Image from 'next/image';
+import checkout from '@/app/server-actions/checkout';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import useCart from '@/utils/hooks/useCart';
 
 interface ShoppingCartProps {
   title: string;
@@ -63,52 +16,15 @@ interface ShoppingCartProps {
     title: string;
     subtotalLabel: string;
     totalLabel: string;
-    ctaText: string;
+    cta: {
+      title: string;
+      href: string;
+    };
   };
 }
 const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', orderSummary }) => {
-  const isLiveMode = getProjectMode() === 'LIVE';
-  const { locale } = getParams<{ locale: string }>();
-  const { cart, updateQty, removeFromCart } = useCartState();
-  const supabase = createClient();
-  const { data } = useSWR(`/api/cart/${cart.length}`, async () => {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .in(
-        'id',
-        cart.map((c) => c.id),
-      );
-    if (error) {
-      throw error;
-    }
-    return data;
-  });
-
-  const products = !isLiveMode
-    ? initialProducts
-    : useMemo(() => {
-        if (!data) {
-          return [];
-        }
-        return cart.map((cartProduct, productIdx) => {
-          const product = data.find((p) => p.id === cartProduct.id);
-          const photos = product?.photos as { id: string; src: string; altText: string; color: string }[];
-          const colors = product?.available_colors as { id: string; name: string; colorBg: string }[];
-
-          return {
-            id: product?.id || 0,
-            name: product?.name || '',
-            price: `$${product?.price}`,
-            color: colors?.find((c) => c.name === cartProduct?.color) || colors[0],
-            inStock: true,
-            imageSrc: photos.find((p) => p.color === cartProduct?.color)?.src || photos[0]?.src,
-            imageAlt: photos.find((p) => p.color === cartProduct?.color)?.altText || photos[0]?.altText,
-            quantity: cartProduct?.qty || 1,
-            href: `/${locale}/products/${product?.id}?color=${cartProduct?.color}`,
-          };
-        });
-      }, [data, cart]);
+  const router = useRouter();
+  const { products, updateQty, removeFromCart, cart } = useCart();
 
   return (
     <div className="bg-white">
@@ -128,10 +44,13 @@ const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', order
                 .map((product, productIdx) => (
                   <li key={product.id} className="flex py-6 sm:py-10">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         alt={product.imageAlt}
                         src={product.imageSrc}
-                        className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                        width={96}
+                        height={96}
+                        className="rounded-md object-cover object-center sm:h-48 sm:w-48"
+                        unoptimized
                       />
                     </div>
 
@@ -253,9 +172,24 @@ const ShoppingCart: Block<ShoppingCartProps> = ({ title, pageBlockId = '', order
             <div className="mt-6">
               <button
                 type="button"
-                className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                disabled={cart.length === 0}
+                onClick={async () => {
+                  const url = await checkout(`http://localhost:3000/${getLink(orderSummary.cta.href)}`, cart);
+                  if (url) {
+                    if (typeof url === 'string') {
+                      router.push(url);
+                    } else {
+                      toast.error(url.error);
+                    }
+                  }
+                }}
+                className="w-full rounded-md border border-transparent inline-block text-center bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
-                <Text pageBlockId={pageBlockId} defaultValue={orderSummary.ctaText} propName="orderSummary.ctaText" />
+                <Text
+                  pageBlockId={pageBlockId}
+                  defaultValue={orderSummary?.cta?.title}
+                  propName="orderSummary.ctaText"
+                />
               </button>
             </div>
           </section>
@@ -275,9 +209,18 @@ ShoppingCart.Schema = {
       title: 'Order summary',
       subtotalLabel: 'Subtotal',
       totalLabel: 'Order total',
-      ctaText: 'Checkout',
+      cta: {
+        title: 'Checkout',
+        href: '/checkout',
+      },
     },
   },
-  sideEditingProps: [],
+  sideEditingProps: [
+    {
+      propName: 'orderSummary.cta.href',
+      label: 'Checkout Link',
+      type: 'link',
+    },
+  ],
 };
 export default ShoppingCart;

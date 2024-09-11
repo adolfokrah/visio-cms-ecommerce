@@ -41,8 +41,8 @@ const FeaturedProducts: Block<FeaturedProductProps> = ({ title, cta, pageBlockId
             price: product.price,
             href: `/products/${product.id}`,
             imageSrc: product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.src,
-          imageAlt:  product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.altText,
-            images: product.photos
+            imageAlt: product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.altText,
+            images: product.photos,
           }) as Product,
       ),
     [data],

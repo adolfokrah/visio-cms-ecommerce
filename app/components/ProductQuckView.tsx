@@ -29,10 +29,18 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function ProductQuickView({open, setOpen, product }:{open:boolean, setOpen: Dispatch<SetStateAction<boolean>>, product: Product}) {
+export default function ProductQuickView({
+  open,
+  setOpen,
+  product,
+}: {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  product: Product;
+}) {
   const [selectedColor, setSelectedColor] = useState(product.availableColors[0].name);
   const { addToCart } = useCartState();
-  const {locale} = getParams<{locale: string}>();
+  const { locale } = getParams<{ locale: string }>();
 
   const image = product.images.find((img) => img.color === selectedColor) || product.images[0];
   return (
@@ -94,32 +102,29 @@ export default function ProductQuickView({open, setOpen, product }:{open:boolean
                         >
                           {product.availableColors.map((color) => (
                             <Radio
-                            key={color.name}
-                            value={color?.name}
-                            aria-label={color.name}
-                            style={{ outlineColor: color.colorBg, outlineOffset: '0.125rem' }}
-                            className={classNames(
-                              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none ',
-                            )}
-                          >
-                            <span
-                              aria-hidden="true"
-                              style={{ backgroundColor: color.colorBg }}
-                              className={classNames('h-8 w-8 rounded-full border border-black border-opacity-10')}
-                            />
-                          </Radio>
+                              key={color.name}
+                              value={color?.name}
+                              aria-label={color.name}
+                              style={{ outlineColor: color.colorBg, outlineOffset: '0.125rem' }}
+                              className={classNames(
+                                'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none ',
+                              )}
+                            >
+                              <span
+                                aria-hidden="true"
+                                style={{ backgroundColor: color.colorBg }}
+                                className={classNames('h-8 w-8 rounded-full border border-black border-opacity-10')}
+                              />
+                            </Radio>
                           ))}
                         </RadioGroup>
                       </fieldset>
 
-                     
-
                       <button
                         type="button"
                         onClick={() => {
-                           
-                            addToCart({ id: product.id, qty: 1, color: selectedColor });
-                            setOpen(false);
+                          addToCart({ id: product.id, qty: 1, color: selectedColor });
+                          setOpen(false);
                         }}
                         className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
@@ -127,7 +132,10 @@ export default function ProductQuickView({open, setOpen, product }:{open:boolean
                       </button>
 
                       <p className="absolute left-4 top-4 text-center sm:static sm:mt-8">
-                        <Link href={getLink(`/${locale}${product.href}`)} className="font-medium text-indigo-600 hover:text-indigo-500">
+                        <Link
+                          href={getLink(`/${locale}${product.href}`)}
+                          className="font-medium text-indigo-600 hover:text-indigo-500"
+                        >
                           View full details
                         </Link>
                       </p>

@@ -9,6 +9,7 @@ import Footer from './Footer';
 import ProductsList from './ProductsList';
 import ProductDetails from './ProductDetails';
 import ShoppingCart from './ShoppingCart';
+import OderPlaced from './OderPlaced';
 const blocks = [
   Hero,
   Navbar,
@@ -20,6 +21,7 @@ const blocks = [
   ProductsList,
   ProductDetails,
   ShoppingCart,
+  OderPlaced,
 ] as unknown as BlockList[];
 
 export default blocks;
