@@ -1,7 +1,7 @@
+"use client"
 import { Block, MediaFile } from 'visio-cms-lib/types';
 import { getLink } from 'visio-cms-lib/utils';
 import Image from 'next/image';
-import RichTextEditor from 'visio-cms-lib/RichText';
 import Text from 'visio-cms-lib/Text';
 import VisioImage from 'visio-cms-lib/Image';
 import List from 'visio-cms-lib/List';
@@ -25,12 +25,10 @@ const Hero: Block<HeroProps> = ({ title, subTitle, cta, imagesGrids, pageBlockId
       <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
         <div className="sm:max-w-lg">
           <div className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            <RichTextEditor
+            <Text
               defaultValue={title}
               pageBlockId={pageBlockId}
               propName="title"
-              allowNewLines={false}
-              allowedControls={['h1', 'text-color']}
             />
           </div>
           <p className="mt-4 text-xl text-gray-500">

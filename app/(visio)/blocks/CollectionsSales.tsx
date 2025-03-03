@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image';
 import { Block, MediaFile } from 'visio-cms-lib/types';
 import Text from 'visio-cms-lib/Text';

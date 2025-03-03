@@ -1,3 +1,4 @@
+"use client"
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Block } from 'visio-cms-lib/types';
 import Text from 'visio-cms-lib/Text';

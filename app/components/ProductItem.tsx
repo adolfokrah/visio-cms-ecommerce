@@ -1,3 +1,4 @@
+"use client"
 import useCartState from '@/utils/state/useCartState';
 import Image from 'next/image';
 import Link from 'next/link';

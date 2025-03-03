@@ -1,3 +1,4 @@
+"use client"
 import Text from 'visio-cms-lib/Text';
 import VisioImage from 'visio-cms-lib/Image';
 import List from 'visio-cms-lib/List';

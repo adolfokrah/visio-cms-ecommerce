@@ -1,3 +1,4 @@
+"use client"
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { MagnifyingGlassIcon, ShoppingBagIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';

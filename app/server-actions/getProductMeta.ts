@@ -5,7 +5,7 @@ export default async function getProductMeta(id:string){
     const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('id', id)
+        .eq('id', Number(id))
         .single();
 
     if (error || !data) return null

@@ -70,7 +70,7 @@ const ProductDetails: Block = () => {
   const { addToCart } = useCartState();
 
   const { data,  isLoading } = useSWR(`/api/product/${id}/${selectedColor}`, async () => {
-    const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('products').select('*').eq('id', Number(id)).single();
     if (error) {
       throw error;
     }

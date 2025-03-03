@@ -1,13 +1,9 @@
+"use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Block } from 'visio-cms-lib/types';
 import Text from 'visio-cms-lib/Text';
-import { createClient } from '@/utils/supabase/client';
-import { useMemo } from 'react';
 import { getLink } from 'visio-cms-lib';
 import Link from 'next/link';
-import { Skeleton } from '@/app/components/Skeleton';
-import useSWR from 'swr';
-import { Product, ProductColor } from '@/app/components/ProductItem';
 import ProductItem from '@/app/components/ProductItem';
 
 interface FeaturedProductProps {
@@ -21,51 +17,7 @@ interface FeaturedProductProps {
 }
 
 const FeaturedProducts: Block<FeaturedProductProps> = ({ title, cta, pageBlockId = '' }) => {
-  const supabase = createClient();
-  const { data, error, isLoading } = useSWR('/api/featuredProducts', async () => {
-    const { data, error } = await supabase.from('products').select('*').eq('is_featured', true);
-    if (error) {
-      throw error;
-    }
-    return data;
-  });
-
-  const products = useMemo(
-    () =>
-      data?.map(
-        (product: any) =>
-          ({
-            id: product.id,
-            name: product.name,
-            availableColors: product.available_colors as ProductColor[],
-            price: product.price,
-            href: `/products/${product.id}`,
-            imageSrc: product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.src,
-            imageAlt: product.photos?.find((photo) => photo.color == product.available_colors[0].name)?.altText,
-            images: product.photos,
-          }) as Product,
-      ),
-    [data],
-  );
-
-  if (isLoading) {
-    return (
-      <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8 ">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Skeleton key={index} className="h-72 relative bg-slate-100" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
+  const products = []
   if (!products) return null;
 
   return (
@@ -88,7 +40,7 @@ const FeaturedProducts: Block<FeaturedProductProps> = ({ title, cta, pageBlockId
 
         <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
           {products.map((product) => (
-            <ProductItem key={product.id} product={product} />
+            <ProductItem key={''} product={product} />
           ))}
         </div>
 

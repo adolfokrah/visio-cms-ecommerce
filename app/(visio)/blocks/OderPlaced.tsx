@@ -1,4 +1,5 @@
 
+"use client"
 import useCartState from '@/utils/state/useCartState';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
